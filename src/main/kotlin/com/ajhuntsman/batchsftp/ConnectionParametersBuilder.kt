@@ -25,8 +25,8 @@ class ConnectionParametersBuilder {
      */
     @Throws(IllegalArgumentException::class)
     fun create(): ConnectionParameters {
-        if (host == null) {
-            throw IllegalArgumentException("host cannot be null")
+        if (StringUtils.isEmpty(host)) {
+            throw IllegalArgumentException("host cannot be blank")
         }
 
         return ConnectionParameters(host!!, port, username, password)

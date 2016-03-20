@@ -8,9 +8,11 @@ import java.io.IOException
 import java.util.*
 
 /**
- * Unit tests for all functionality.
+ * This test is not run as part of the build, because the class name ends with "Tests" instead of "Test".
+ *
+ * However, it is a very useful functional test which actually performs SFTP operations.
  */
-class SftpTest : TestCase() {
+class SftpRemoteTests : TestCase() {
 
     // Put your own values here...
     private val ENVIRONMENT_VARIABLE_HOST = "mySftpServer.com"
@@ -51,7 +53,7 @@ class SftpTest : TestCase() {
             theRelativeFilePath = File.separator + theRelativeFilePath
         }
 
-        val url = SftpTest::class.java.getResource(theRelativeFilePath)
+        val url = SftpRemoteTests::class.java.getResource(theRelativeFilePath)
         val testFile = File(url.file)
         TestCase.assertTrue("No test file exists for relative path '$theRelativeFilePath'", testFile.exists())
         return testFile
