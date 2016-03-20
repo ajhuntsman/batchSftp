@@ -10,15 +10,15 @@ import java.util.*
 /**
  * Unit tests for all functionality.
  */
-class SftpTests : TestCase() {
+class SftpTest : TestCase() {
 
     // Put your own values here...
-    private val ENVIRONMENT_VARIABLE_HOST = "VOLUSION_SFTP_HOST"
-    private val ENVIRONMENT_VARIABLE_PORT = "VOLUSION_SFTP_PORT"
-    private val ENVIRONMENT_VARIABLE_USERNAME = "VOLUSION_SFTP_USERNAME"
-    private val ENVIRONMENT_VARIABLE_PASSWORD = "VOLUSION_SFTP_PASSWORD"
-    private val remoteDirectory = "/vspfiles/photos/tempProductImageUploads"
-    private val localDownloadsDirectory = "/Users/andyhuntsman/Desktop/_volusionTestDownloads"
+    private val ENVIRONMENT_VARIABLE_HOST = "mySftpServer.com"
+    private val ENVIRONMENT_VARIABLE_PORT = "2222"
+    private val ENVIRONMENT_VARIABLE_USERNAME = "mySftpUsername"
+    private val ENVIRONMENT_VARIABLE_PASSWORD = "mySftpPassword"
+    private val remoteDirectory = "/myRemoteTestDirectory/testPhotos"
+    private val localDownloadsDirectory = "/Users/johndoe/Desktop/_testDownloads"
 
     private var testFiles: Array<File>? = null
     private var client: Client? = null
@@ -51,7 +51,7 @@ class SftpTests : TestCase() {
             theRelativeFilePath = File.separator + theRelativeFilePath
         }
 
-        val url = SftpTests::class.java.getResource(theRelativeFilePath)
+        val url = SftpTest::class.java.getResource(theRelativeFilePath)
         val testFile = File(url.file)
         TestCase.assertTrue("No test file exists for relative path '$theRelativeFilePath'", testFile.exists())
         return testFile
@@ -95,7 +95,12 @@ class SftpTests : TestCase() {
      * Creates new connection parameters.
      */
     private fun createConnectionParameters(): ConnectionParameters {
-        return ConnectionParametersBuilder.create().createConnectionParameters().withHostFromEnvironmentVariable(ENVIRONMENT_VARIABLE_HOST).withPortFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PORT).withUsernameFromEnvironmentVariable(ENVIRONMENT_VARIABLE_USERNAME).withPasswordFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PASSWORD).create()
+        return ConnectionParametersBuilder.create().createConnectionParameters()
+                .withHostFromEnvironmentVariable(ENVIRONMENT_VARIABLE_HOST)
+                .withPortFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PORT)
+                .withUsernameFromEnvironmentVariable(ENVIRONMENT_VARIABLE_USERNAME)
+                .withPasswordFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PASSWORD)
+                .create()
     }
 
     @Throws(Exception::class)
@@ -167,5 +172,7 @@ class SftpTests : TestCase() {
         TestCase.assertTrue("File was not deleted!", client!!.delete(remoteFilePath))
 
         TestCase.assertFalse("Files were not actually deleted from the server!", client!!.checkFile(remoteFilePath))
+
+        //TestCase.assertTrue("Remote directory was not deleted!", client!!.delete(remoteDirectory))
     }
 }
