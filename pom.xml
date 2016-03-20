@@ -17,6 +17,19 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Andy Huntsman</name>
+            <email>andrewhuntsman@hotmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:ajhuntsman/batchSftp.git</connection>
+        <developerConnection>scm:git:git@github.com:ajhuntsman/batchSftp.git</developerConnection>
+        <url>git@github.com:ajhuntsman/batchSftp.git</url>
+    </scm>
+
     <properties>
         <kotlin.version>1.0.0</kotlin.version>
         <junit.version>4.12</junit.version>
