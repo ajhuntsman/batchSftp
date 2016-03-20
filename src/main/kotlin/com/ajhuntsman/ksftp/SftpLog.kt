@@ -1,4 +1,4 @@
-package com.ajhuntsman.batchsftp
+package com.ajhuntsman.ksftp
 
 import org.apache.commons.lang3.StringUtils
 import java.util.concurrent.TimeUnit
@@ -10,7 +10,7 @@ import java.util.logging.Logger
  */
 object SftpLog {
 
-    val TAG = "com.ajhuntsman.batchsftp"
+    val TAG = "com.ajhuntsman.ksftp"
 
     private var enabled = true
 

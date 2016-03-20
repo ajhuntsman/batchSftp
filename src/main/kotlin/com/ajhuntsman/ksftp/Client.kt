@@ -1,6 +1,6 @@
-package com.ajhuntsman.batchsftp
+package com.ajhuntsman.ksftp
 
-import com.ajhuntsman.batchsftp.task.*
+import com.ajhuntsman.ksftp.task.*
 
 /**
  * The SFTP client.

@@ -1,4 +1,4 @@
-package com.ajhuntsman.batchsftp
+package com.ajhuntsman.ksftp
 
 import org.apache.commons.lang3.StringUtils
 import java.util.*

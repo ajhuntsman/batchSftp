@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.ajhuntsman.batchsftp</groupId>
-    <artifactId>batchSftp</artifactId>
+    <groupId>com.ajhuntsman.ksftp</groupId>
+    <artifactId>ksftp</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>batchSftp</name>
+    <name>ksftp</name>
     <description>A Kotlin-based SFTP framework.</description>
-    <url>https://github.com/ajhuntsman/batchSftp</url>
+    <url>https://github.com/ajhuntsman/ksftp</url>
 
     <licenses>
         <license>
@@ -25,9 +25,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:ajhuntsman/batchSftp.git</connection>
-        <developerConnection>scm:git:git@github.com:ajhuntsman/batchSftp.git</developerConnection>
-        <url>git@github.com:ajhuntsman/batchSftp.git</url>
+        <connection>scm:git:git@github.com:ajhuntsman/ksftp.git</connection>
+        <developerConnection>scm:git:git@github.com:ajhuntsman/ksftp.git</developerConnection>
+        <url>git@github.com:ajhuntsman/ksftp.git</url>
     </scm>
 
     <properties>

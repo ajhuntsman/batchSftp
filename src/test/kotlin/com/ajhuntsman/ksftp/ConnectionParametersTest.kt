@@ -1,4 +1,4 @@
-package com.ajhuntsman.batchsftp
+package com.ajhuntsman.ksftp
 
 import junit.framework.TestCase
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.ajhuntsman.batchsftp
+package com.ajhuntsman.ksftp
 
 /**
  * Encapsulates a pair of file paths.

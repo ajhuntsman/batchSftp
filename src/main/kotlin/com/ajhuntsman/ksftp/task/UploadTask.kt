@@ -1,8 +1,8 @@
-package com.ajhuntsman.batchsftp.task
+package com.ajhuntsman.ksftp.task
 
-import com.ajhuntsman.batchsftp.ConnectionParameters
-import com.ajhuntsman.batchsftp.FilePair
-import com.ajhuntsman.batchsftp.SftpLog
+import com.ajhuntsman.ksftp.ConnectionParameters
+import com.ajhuntsman.ksftp.FilePair
+import com.ajhuntsman.ksftp.SftpLog
 import com.jcraft.jsch.SftpException
 import org.apache.commons.lang3.StringUtils
 import java.io.File
