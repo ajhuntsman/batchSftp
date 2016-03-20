@@ -37,7 +37,7 @@ class SftpRemoteTests : TestCase() {
         TestCase.assertTrue("Test images directory could not be found!", testImagesSourceDirectory.isDirectory)
         testFiles = testImagesSourceDirectory.listFiles()
         TestCase.assertTrue("No test image files were found!", testFiles != null && testFiles!!.size > 0)
-        SftpLog.logFine("Found " + testFiles!!.size + " test image files")
+        KsftpLog.logDebug("Found " + testFiles!!.size + " test image files")
     }
 
     /**

@@ -2,7 +2,7 @@ package com.ajhuntsman.ksftp.task
 
 import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
-import com.ajhuntsman.ksftp.SftpLog
+import com.ajhuntsman.ksftp.KsftpLog
 import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
@@ -25,7 +25,7 @@ internal abstract class BaseTask(val connectionParameters: ConnectionParameters,
             // Have subclasses do their work
             return doWork()
         } catch (e: Exception) {
-            SftpLog.logSevere(e.message)
+            KsftpLog.logError(e.message)
             return false
         } finally {
             tearDownSftpConnection()
@@ -55,17 +55,17 @@ internal abstract class BaseTask(val connectionParameters: ConnectionParameters,
                 session!!.setPassword(connectionParameters.password)
             }
 
-            SftpLog.logFine("Attempting to create SFTP session...")
+            KsftpLog.logDebug("Attempting to create SFTP session...")
             session!!.connect()
-            SftpLog.logFine("SFTP session established")
+            KsftpLog.logDebug("SFTP session established")
 
             // Open an SFTP connection
             sftpChannel = session!!.openChannel("sftp") as ChannelSftp
-            SftpLog.logFine("Attempting to create SFTP channel...")
+            KsftpLog.logDebug("Attempting to create SFTP channel...")
             sftpChannel!!.connect()
-            SftpLog.logFine("SFTP channel established")
+            KsftpLog.logDebug("SFTP channel established")
         } catch (e: Exception) {
-            SftpLog.logSevere(e.message)
+            KsftpLog.logError(e.message)
             throw e
         }
 

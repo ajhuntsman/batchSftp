@@ -2,7 +2,7 @@ package com.ajhuntsman.ksftp.task
 
 import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
-import com.ajhuntsman.ksftp.SftpLog
+import com.ajhuntsman.ksftp.KsftpLog
 import com.jcraft.jsch.SftpException
 import org.apache.commons.lang3.StringUtils
 
@@ -36,25 +36,25 @@ internal class DeleteTask(connectionParameters: ConnectionParameters, filePairs:
                 try {
                     sftpChannel?.ls(remotePath)
                 } catch (e: SftpException) {
-                    SftpLog.logInfo("File doesn't exist: '$remotePath'")
+                    KsftpLog.logInfo("File doesn't exist: '$remotePath'")
                     continue
                 }
 
                 try {
                     sftpChannel?.rm(remotePath)
                 } catch (e: SftpException) {
-                    SftpLog.logInfo("Couldn't delete file: '$remotePath'")
+                    KsftpLog.logInfo("Couldn't delete file: '$remotePath'")
                     return false
                 }
 
             }
 
-            SftpLog.logInfo("Took " + SftpLog.formatMillis(System.currentTimeMillis() - startTime) +
+            KsftpLog.logInfo("Took " + KsftpLog.formatMillis(System.currentTimeMillis() - startTime) +
                     " to delete " + filePairs.size + " files")
 
             return true
         } catch (e: Exception) {
-            SftpLog.logSevere(e.message)
+            KsftpLog.logError(e.message)
             throw e
         }
 

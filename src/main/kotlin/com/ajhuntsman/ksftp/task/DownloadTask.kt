@@ -2,7 +2,7 @@ package com.ajhuntsman.ksftp.task
 
 import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
-import com.ajhuntsman.ksftp.SftpLog
+import com.ajhuntsman.ksftp.KsftpLog
 import org.apache.commons.lang3.StringUtils
 
 /**
@@ -37,12 +37,12 @@ internal class DownloadTask(connectionParameters: ConnectionParameters, filePair
                 sftpChannel?.get(remoteFilePath, localFilePath)
             }
 
-            SftpLog.logInfo("Took " + SftpLog.formatMillis(System.currentTimeMillis() - startTime) +
+            KsftpLog.logInfo("Took " + KsftpLog.formatMillis(System.currentTimeMillis() - startTime) +
                     " to process " + filePairs.size + " file downloads")
 
             return true
         } catch (e: Exception) {
-            SftpLog.logSevere(e.message)
+            KsftpLog.logError(e.message)
             throw e
         }
 

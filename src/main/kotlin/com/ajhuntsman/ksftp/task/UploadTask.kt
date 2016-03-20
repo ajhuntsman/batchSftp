@@ -2,7 +2,7 @@ package com.ajhuntsman.ksftp.task
 
 import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
-import com.ajhuntsman.ksftp.SftpLog
+import com.ajhuntsman.ksftp.KsftpLog
 import com.jcraft.jsch.SftpException
 import org.apache.commons.lang3.StringUtils
 import java.io.File
@@ -41,7 +41,7 @@ internal class UploadTask(connectionParameters: ConnectionParameters, filePairs:
 
                 val localFile = File(localFilePath)
                 if (!localFile.isFile) {
-                    SftpLog.logSevere("Missing local file '$localFilePath'")
+                    KsftpLog.logError("Missing local file '$localFilePath'")
                     continue
                 }
 
@@ -51,7 +51,7 @@ internal class UploadTask(connectionParameters: ConnectionParameters, filePairs:
                     sftpChannel?.cd(remoteDirectoryPath)
                 } catch (e: SftpException) {
                     sftpChannel?.mkdir(remoteDirectoryPath)
-                    SftpLog.logInfo("Created remote directory '$remoteDirectoryPath'")
+                    KsftpLog.logInfo("Created remote directory '$remoteDirectoryPath'")
                 } finally {
                     // Get back to our starting directory
                     sftpChannel?.cd(pwd)
@@ -59,15 +59,15 @@ internal class UploadTask(connectionParameters: ConnectionParameters, filePairs:
 
                 // Upload the file
                 sftpChannel?.put(localFilePath, remoteFilePath)
-                SftpLog.logInfo("Uploaded '$localFilePath' to '$remoteFilePath'")
+                KsftpLog.logInfo("Uploaded '$localFilePath' to '$remoteFilePath'")
             }
 
-            SftpLog.logInfo("Took " + SftpLog.formatMillis(System.currentTimeMillis() - startTime) +
+            KsftpLog.logInfo("Took " + KsftpLog.formatMillis(System.currentTimeMillis() - startTime) +
                     " to process " + filePairs.size + " file uploads")
 
             return true
         } catch (e: Exception) {
-            SftpLog.logSevere(e.message)
+            KsftpLog.logError(e.message)
             throw e
         }
 

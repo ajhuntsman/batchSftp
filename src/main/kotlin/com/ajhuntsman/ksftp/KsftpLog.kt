@@ -1,17 +1,19 @@
 package com.ajhuntsman.ksftp
 
 import org.apache.commons.lang3.StringUtils
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
-import java.util.logging.Logger
 
 /**
  * The logger, which can be enabled or disabled via [Client].
  */
-object SftpLog {
+object KsftpLog {
 
-    val TAG = "com.ajhuntsman.ksftp"
+    private val PKG = "com.ajhuntsman.ksftp"
 
+    private val log: Logger = LogManager.getLogger()
     private var enabled = true
 
     /**
@@ -44,11 +46,11 @@ object SftpLog {
             val stackElements = Thread.currentThread().stackTrace
             for (stackElement in stackElements) {
                 val fullClassName = stackElement.className
-                if (fullClassName.startsWith(TAG) && !StringUtils.equals(SftpLog::class.java.name, fullClassName)) {
-                    //val className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
+                if (fullClassName.startsWith(PKG) && !StringUtils.equals(KsftpLog::class.java.name, fullClassName)) {
+                    val className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1)
                     val methodName = stackElement.methodName
                     val lineNumber = stackElement.lineNumber
-                    return "$fullClassName.$methodName: $lineNumber: "
+                    return "$className.$methodName: $lineNumber: "
                 }
             }
         } catch (exc: Exception) {
@@ -59,12 +61,12 @@ object SftpLog {
     }
 
     /**
-     * Logs the specified message at the [Level.FINE] level.
+     * Logs the specified message at the [Level.DEBUG] level.
      *
      * @param message the message to log
      */
-    fun logFine(message: String?) {
-        log(Level.FINE, message)
+    fun logDebug(message: String?) {
+        log(Level.DEBUG, message)
     }
 
     /**
@@ -77,12 +79,12 @@ object SftpLog {
     }
 
     /**
-     * Logs the specified message at the [Level.SEVERE] level.
+     * Logs the specified message at the [Level.ERROR] level.
      *
      * @param message the message to log
      */
-    fun logSevere(message: String?) {
-        log(Level.SEVERE, message)
+    fun logError(message: String?) {
+        log(Level.ERROR, message)
     }
 
     private fun log(level: Level, msg: String?) {
@@ -93,7 +95,7 @@ object SftpLog {
         // Append the message to the current stack trace
         var formattedMessage = parseStackTrace() + msg
 
-        Logger.getLogger(TAG).log(level, formattedMessage)
+        log.log(level, formattedMessage)
     }
 
 }
