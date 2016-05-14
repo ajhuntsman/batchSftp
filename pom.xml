@@ -4,9 +4,9 @@
     <groupId>com.github.ajhuntsman</groupId>
     <artifactId>ksftp</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <name>ksftp</name>
-    <description>A Kotlin-based SFTP framework.</description>
+    <description>A simple, asynchronous Kotlin SFTP framework which uses the JSCH library.</description>
     <url>https://github.com/ajhuntsman/ksftp</url>
 
     <licenses>
@@ -31,7 +31,7 @@
     </scm>
 
     <properties>
-        <kotlin.version>1.0.0</kotlin.version>
+        <kotlin.version>1.0.2</kotlin.version>
         <junit.version>4.12</junit.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
