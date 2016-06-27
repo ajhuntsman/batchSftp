@@ -3,6 +3,7 @@ package com.ajhuntsman.ksftp
 import junit.framework.TestCase
 import org.apache.commons.lang3.StringUtils
 import org.junit.Before
+import org.junit.Test
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -15,12 +16,13 @@ import java.util.*
 class SftpRemoteTests : TestCase() {
 
     // Put your own values here...
-    private val ENVIRONMENT_VARIABLE_HOST = "mySftpServer.com"
-    private val ENVIRONMENT_VARIABLE_PORT = "2222"
-    private val ENVIRONMENT_VARIABLE_USERNAME = "mySftpUsername"
-    private val ENVIRONMENT_VARIABLE_PASSWORD = "mySftpPassword"
-    private val remoteDirectory = "/myRemoteTestDirectory/testPhotos"
-    private val localDownloadsDirectory = "/Users/johndoe/Desktop/_testDownloads"
+    private val ENVIRONMENT_VARIABLE_HOST = "VOLUSION_SFTP_HOST" // mySftpServer.com
+    private val ENVIRONMENT_VARIABLE_PORT = "VOLUSION_SFTP_PORT" // 2222
+    private val ENVIRONMENT_VARIABLE_USERNAME = "VOLUSION_SFTP_USERNAME" // mySftpUsername
+    private val ENVIRONMENT_VARIABLE_PASSWORD = "VOLUSION_SFTP_PASSWORD" // mySftpPassword
+    private val remoteDirectoryForUploads = "/vspfiles/photos/tempProductImageUploads" // /myRemoteTestDirectory/testPhotos
+    private val remoteDirectoryForMoves = "ksftpTestRemoteFileMoves"
+    private val localDownloadsDirectory = "/Users/andyhuntsman/Desktop/_volusionTestDownloads" // /Users/johndoe/Desktop/_testDownloads
 
     private var testFiles: Array<File>? = null
     private var client: Client? = null
@@ -105,20 +107,51 @@ class SftpRemoteTests : TestCase() {
                 .create()
     }
 
+    @Test
     @Throws(Exception::class)
     fun testAllSftpOperations() {
-        doBatchUploads()
+        doUploads()
         doBatchDownloads()
         doBatchRenames()
         doRemoteFileDeletes()
     }
 
+    /*@Test
     @Throws(Exception::class)
-    private fun doBatchUploads() {
+    fun testBatchUpload() {
         val remoteFilePaths = ArrayList<String>()
         val filePairs = ArrayList<FilePair>()
         for (testFile in testFiles!!) {
-            val remoteFilePath = remoteDirectory + File.separator + testFile.name
+            val remoteFilePath = remoteDirectoryForUploads + File.separator + testFile.name
+            filePairs.add(FilePair(testFile.path, remoteFilePath))
+            remoteFilePaths.add(remoteFilePath)
+        }
+
+        TestCase.assertTrue("Files were not uploaded!", client!!.upload(filePairs, 2, (60*5*testFiles!!.size)))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun testBatchUploadTimeout() {
+        val remoteFilePaths = ArrayList<String>()
+        val filePairs = ArrayList<FilePair>()
+        for (testFile in testFiles!!) {
+            val remoteFilePath = remoteDirectoryForUploads + File.separator + testFile.name
+            filePairs.add(FilePair(testFile.path, remoteFilePath))
+            remoteFilePaths.add(remoteFilePath)
+        }
+
+        assertFailsWith(UploadTimeoutException::class, "Batch upload timed out with an unexpected exception") {
+            client!!.upload(filePairs, 2, 5)
+        }
+    }*/
+
+    @Throws(Exception::class)
+    private fun doUploads() {
+        val remoteFilePaths = ArrayList<String>()
+        val filePairs = ArrayList<FilePair>()
+        for (testFile in testFiles!!) {
+            val remoteFilePath = remoteDirectoryForUploads + File.separator + testFile.name
             filePairs.add(FilePair(testFile.path, remoteFilePath))
             remoteFilePaths.add(remoteFilePath)
         }
@@ -135,7 +168,7 @@ class SftpRemoteTests : TestCase() {
 
         val filePairs = ArrayList<FilePair>()
         for (testFile in testFiles!!) {
-            val remoteFilePath = remoteDirectory + File.separator + testFile.name
+            val remoteFilePath = remoteDirectoryForUploads + File.separator + testFile.name
             val localPath = testDownloadsDirectory.path + File.separator + testFile.name
             filePairs.add(FilePair(localPath, remoteFilePath))
         }
@@ -155,8 +188,8 @@ class SftpRemoteTests : TestCase() {
         val remoteFilePaths = ArrayList<String>()
         val filePairs = ArrayList<FilePair>()
         for (testFile in testFiles!!) {
-            val oldRemotePath = remoteDirectory + File.separator + testFile.name
-            val newRemotePath = remoteDirectory + File.separator + "testRemoteFileMoves" + File.separator + testFile.name
+            val oldRemotePath = remoteDirectoryForUploads + File.separator + testFile.name
+            val newRemotePath = remoteDirectoryForUploads + File.separator + remoteDirectoryForMoves + File.separator + testFile.name
             filePairs.add(FilePair(oldRemotePath, newRemotePath))
             remoteFilePaths.add(newRemotePath)
         }
@@ -170,11 +203,11 @@ class SftpRemoteTests : TestCase() {
 
     @Throws(Exception::class)
     private fun doRemoteFileDeletes() {
-        val remoteFilePath = remoteDirectory + File.separator + "testRemoteFileMoves" + File.separator + testFiles!![2].name
+        val remoteFilePath = remoteDirectoryForUploads + File.separator + remoteDirectoryForMoves + File.separator + testFiles!![2].name
         TestCase.assertTrue("File was not deleted!", client!!.delete(remoteFilePath))
-
         TestCase.assertFalse("Files were not actually deleted from the server!", client!!.checkFile(remoteFilePath))
 
-        //TestCase.assertTrue("Remote directory was not deleted!", client!!.delete(remoteDirectory))
+        TestCase.assertTrue("Remote directory was not deleted: '$remoteDirectoryForUploads'", client!!.delete(remoteDirectoryForUploads))
+        TestCase.assertFalse("Remote directory was not actually deleted from the server: '$remoteDirectoryForUploads'", client!!.checkFile(remoteDirectoryForUploads))
     }
 }

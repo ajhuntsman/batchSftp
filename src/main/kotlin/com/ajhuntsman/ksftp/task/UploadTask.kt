@@ -62,6 +62,8 @@ internal class UploadTask(connectionParameters: ConnectionParameters, filePairs:
                 KsftpLog.logInfo("Uploaded '$localFilePath' to '$remoteFilePath'")
             }
 
+            //try {Thread.sleep(1000*10);} catch (e: Exception) {/* no-op */}
+
             KsftpLog.logInfo("Took " + KsftpLog.formatMillis(System.currentTimeMillis() - startTime) +
                     " to process " + filePairs.size + " file uploads")
 
