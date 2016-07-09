@@ -4,9 +4,9 @@ import org.apache.commons.lang3.StringUtils
 import java.util.*
 
 /**
- * Builds a new [ConnectionParameters].
+ * Builds a new [SftpConnectionParameters].
  */
-class ConnectionParametersBuilder {
+class SftpConnectionParametersBuilder {
 
     private var host: String? = null
     private var port: Int = 22
@@ -16,20 +16,20 @@ class ConnectionParametersBuilder {
     /**
      * Creates a new builder.
      */
-    fun createConnectionParameters(): ConnectionParametersBuilder {
-        return ConnectionParametersBuilder()
+    fun createConnectionParameters(): SftpConnectionParametersBuilder {
+        return SftpConnectionParametersBuilder()
     }
 
     /**
-     * Gets the [ConnectionParameters] created by this builder.
+     * Gets the [SftpConnectionParameters] created by this builder.
      */
     @Throws(IllegalArgumentException::class)
-    fun create(): ConnectionParameters {
+    fun create(): SftpConnectionParameters {
         if (StringUtils.isEmpty(host)) {
             throw IllegalArgumentException("host cannot be blank")
         }
 
-        return ConnectionParameters(host!!, port, username, password)
+        return SftpConnectionParameters(host!!, port, username, password)
     }
 
     /**
@@ -46,7 +46,7 @@ class ConnectionParametersBuilder {
      *
      * @param host the value to use
      */
-    fun withHost(host: String): ConnectionParametersBuilder {
+    fun withHost(host: String): SftpConnectionParametersBuilder {
         this.host = host
         return this
     }
@@ -56,7 +56,7 @@ class ConnectionParametersBuilder {
      *
      * @param environmentVariableName the name of the environment variable whose value should be used as the host
      */
-    fun withHostFromEnvironmentVariable(environmentVariableName: String): ConnectionParametersBuilder {
+    fun withHostFromEnvironmentVariable(environmentVariableName: String): SftpConnectionParametersBuilder {
         this.host = getEnvironmentVariable(environmentVariableName)
         return this
     }
@@ -66,7 +66,7 @@ class ConnectionParametersBuilder {
      *
      * @param port the value to use
      */
-    fun withPort(port: Int): ConnectionParametersBuilder {
+    fun withPort(port: Int): SftpConnectionParametersBuilder {
         this.port = port
         return this
     }
@@ -76,7 +76,7 @@ class ConnectionParametersBuilder {
 
      * @param environmentVariableName the name of the environment variable whose value should be used as the port
      */
-    fun withPortFromEnvironmentVariable(environmentVariableName: String): ConnectionParametersBuilder {
+    fun withPortFromEnvironmentVariable(environmentVariableName: String): SftpConnectionParametersBuilder {
         val environmentVariableValue = getEnvironmentVariable(environmentVariableName)
         if (StringUtils.isNotEmpty(environmentVariableValue)) {
             this.port = Integer.valueOf(environmentVariableValue)
@@ -89,7 +89,7 @@ class ConnectionParametersBuilder {
 
      * @param username the value to use
      */
-    fun withUsername(username: String): ConnectionParametersBuilder {
+    fun withUsername(username: String): SftpConnectionParametersBuilder {
         this.username = username
         return this
     }
@@ -99,7 +99,7 @@ class ConnectionParametersBuilder {
 
      * @param environmentVariableName the name of the environment variable whose value should be used as the username
      */
-    fun withUsernameFromEnvironmentVariable(environmentVariableName: String): ConnectionParametersBuilder {
+    fun withUsernameFromEnvironmentVariable(environmentVariableName: String): SftpConnectionParametersBuilder {
         this.username = getEnvironmentVariable(environmentVariableName)
         return this
     }
@@ -109,7 +109,7 @@ class ConnectionParametersBuilder {
 
      * @param password the value to use
      */
-    fun withPassword(password: ByteArray): ConnectionParametersBuilder {
+    fun withPassword(password: ByteArray): SftpConnectionParametersBuilder {
         this.password = Arrays.copyOf(password, password.size)
         return this
     }
@@ -119,7 +119,7 @@ class ConnectionParametersBuilder {
 
      * @param environmentVariableName the name of the environment variable whose value should be used as the password
      */
-    fun withPasswordFromEnvironmentVariable(environmentVariableName: String): ConnectionParametersBuilder {
+    fun withPasswordFromEnvironmentVariable(environmentVariableName: String): SftpConnectionParametersBuilder {
         val environmentVariableValue = getEnvironmentVariable(environmentVariableName)
         if (StringUtils.isNotEmpty(environmentVariableValue)) {
             this.password = environmentVariableValue?.toByteArray()
@@ -128,6 +128,6 @@ class ConnectionParametersBuilder {
     }
 
     companion object Factory {
-        fun create(): ConnectionParametersBuilder = ConnectionParametersBuilder()
+        fun create(): SftpConnectionParametersBuilder = SftpConnectionParametersBuilder()
     }
 }

@@ -1,14 +1,14 @@
 package com.ajhuntsman.ksftp.task
 
-import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
 import com.ajhuntsman.ksftp.KsftpLog
+import com.ajhuntsman.ksftp.SftpConnectionParameters
 import org.apache.commons.lang3.StringUtils
 
 /**
  * Downloads one or more files.
  */
-internal class DownloadTask(connectionParameters: ConnectionParameters, filePairs: List<FilePair>) : BaseTask(connectionParameters, filePairs) {
+internal class DownloadTask(sftpConnectionParameters: SftpConnectionParameters, filePairs: List<FilePair>) : BaseTask(sftpConnectionParameters, filePairs) {
 
     override fun doWork(): Boolean {
         return downloadFiles()

@@ -7,18 +7,20 @@ import java.util.concurrent.*
 /**
  * The SFTP client.
  */
-class Client(val connectionParameters: ConnectionParameters) {
+class SftpClient(val sftpConnectionParameters: SftpConnectionParameters) {
 
-    @Throws(Exception::class)
-    fun upload(localFilePath: String, remoteFilePath: String): Boolean {
-        return UploadTask(connectionParameters, listOf(FilePair(localFilePath, remoteFilePath)))
-                .call()!!
+    @Throws(UploadTimeoutException::class, InterruptedException::class)
+    fun upload(localFilePath: String, remoteFilePath: String, timeoutInSeconds: Int): Boolean {
+        return uploadHelper(listOf(UploadTask(sftpConnectionParameters, listOf(FilePair(localFilePath, remoteFilePath)))), timeoutInSeconds)
     }
 
-    @Throws(Exception::class)
-    fun upload(filePairs: List<FilePair>): Boolean {
-        return UploadTask(connectionParameters, filePairs)
-                .call()!!
+    @Throws(UploadTimeoutException::class, InterruptedException::class)
+    fun upload(filePairs: List<FilePair>, timeoutInSeconds: Int): Boolean {
+        if (filePairs.isEmpty()) {
+            return true
+        }
+
+        return uploadHelper(listOf(UploadTask(sftpConnectionParameters, filePairs)), timeoutInSeconds)
     }
 
     @Throws(UploadTimeoutException::class, InterruptedException::class)
@@ -27,26 +29,43 @@ class Client(val connectionParameters: ConnectionParameters) {
             return true
         }
 
-        // Create one task for each batch of files
+        // Partition the files into batches and create one task for each batch
         val tasks = mutableListOf<UploadTask>()
         filePairs.asSequence().batch(batchSize).forEach { group ->
-            tasks.add(UploadTask(connectionParameters, group))
+            tasks.add(UploadTask(sftpConnectionParameters, group))
+        }
+
+        return uploadHelper(tasks, timeoutInSeconds)
+    }
+
+    @Throws(UploadTimeoutException::class, InterruptedException::class)
+    private fun uploadHelper(uploadTasks: List<UploadTask>, timeoutInSeconds: Int): Boolean {
+        if (uploadTasks.isEmpty()) {
+            return true
         }
 
         val threadPool = Executors.newSingleThreadExecutor()
         val futures = mutableListOf<Future<Boolean>>()
         var success = true
+        var nbrFiles = 0
         try {
             // Queue up tasks
-            for (task in tasks) {
+            for (task in uploadTasks) {
+                nbrFiles += task.filePairs.size
                 futures.add(threadPool.submit(task))
+            }
+
+            // If the timeout was invalid, set a default of 1 hour per file
+            var adjustedTimeoutInSeconds = timeoutInSeconds
+            if (adjustedTimeoutInSeconds < 1) {
+                adjustedTimeoutInSeconds = 60*60*nbrFiles
             }
 
             // Block & wait for tasks to finish
             threadPool.shutdown()
-            val timedOut = !threadPool.awaitTermination(timeoutInSeconds.toLong(), TimeUnit.SECONDS)
+            val timedOut = !threadPool.awaitTermination(adjustedTimeoutInSeconds.toLong(), TimeUnit.SECONDS)
             if (timedOut) {
-                val msg = "Upload of " + filePairs.size + " files timed out after " + timeoutInSeconds + " seconds!"
+                val msg = "Upload of " + nbrFiles + " files timed out after " + adjustedTimeoutInSeconds + " seconds!"
                 KsftpLog.logError(msg)
                 throw UploadTimeoutException(msg)
             }
@@ -77,13 +96,13 @@ class Client(val connectionParameters: ConnectionParameters) {
 
     @Throws(Exception::class)
     fun download(localFilePath: String, remoteFilePath: String): Boolean {
-        return DownloadTask(connectionParameters, listOf(FilePair(localFilePath, remoteFilePath)))
+        return DownloadTask(sftpConnectionParameters, listOf(FilePair(localFilePath, remoteFilePath)))
                 .call()!!
     }
 
     @Throws(Exception::class)
     fun download(filePairs: List<FilePair>): Boolean {
-        return DownloadTask(connectionParameters, filePairs)
+        return DownloadTask(sftpConnectionParameters, filePairs)
                 .call()!!
     }
 
@@ -98,7 +117,7 @@ class Client(val connectionParameters: ConnectionParameters) {
         for (remoteFilePath in remoteFilePaths) {
             filePairs.add(FilePair(remoteFilePath, remoteFilePath))
         }
-        return FilesExistTask(connectionParameters, filePairs)
+        return FilesExistTask(sftpConnectionParameters, filePairs)
                 .call()!!
     }
 
@@ -109,7 +128,7 @@ class Client(val connectionParameters: ConnectionParameters) {
 
     @Throws(Exception::class)
     fun rename(filePairs: List<FilePair>): Boolean {
-        return RenameTask(connectionParameters, filePairs)
+        return RenameTask(sftpConnectionParameters, filePairs)
                 .call()!!
     }
 
@@ -124,12 +143,12 @@ class Client(val connectionParameters: ConnectionParameters) {
         for (remoteFilePath in remoteFilePaths) {
             filePairs.add(FilePair(remoteFilePath, remoteFilePath))
         }
-        return DeleteTask(connectionParameters, filePairs)
+        return DeleteTask(sftpConnectionParameters, filePairs)
                 .call()!!
     }
 
     companion object Factory {
-        fun create(connectionParameters: ConnectionParameters): Client = Client(connectionParameters)
+        fun create(sftpConnectionParameters: SftpConnectionParameters): SftpClient = SftpClient(sftpConnectionParameters)
     }
 
     private fun <T> Sequence<T>.batch(n: Int): Sequence<List<T>> {

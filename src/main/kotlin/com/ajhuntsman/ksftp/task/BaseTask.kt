@@ -1,8 +1,8 @@
 package com.ajhuntsman.ksftp.task
 
-import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
 import com.ajhuntsman.ksftp.KsftpLog
+import com.ajhuntsman.ksftp.SftpConnectionParameters
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.JSch
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable
 /**
  * The base class for all tasks.
  */
-internal abstract class BaseTask(val connectionParameters: ConnectionParameters, var filePairs: List<FilePair>) : Callable<Boolean>, Comparable<BaseTask> {
+internal abstract class BaseTask(val sftpConnectionParameters: SftpConnectionParameters, var filePairs: List<FilePair>) : Callable<Boolean>, Comparable<BaseTask> {
 
     private var session: Session? = null
     protected var sftpChannel: ChannelSftp? = null
@@ -49,13 +49,13 @@ internal abstract class BaseTask(val connectionParameters: ConnectionParameters,
         try {
             // Create a session
             session = jsch.getSession(
-                    connectionParameters.username,
-                    connectionParameters.host,
-                    connectionParameters.port)
+                    sftpConnectionParameters.username,
+                    sftpConnectionParameters.host,
+                    sftpConnectionParameters.port)
             session!!.setConfig("StrictHostKeyChecking", "no")
 
-            if (connectionParameters.password != null) {
-                session!!.setPassword(connectionParameters.password)
+            if (sftpConnectionParameters.password != null) {
+                session!!.setPassword(sftpConnectionParameters.password)
             }
 
             KsftpLog.logDebug("Attempting to create SFTP session...")

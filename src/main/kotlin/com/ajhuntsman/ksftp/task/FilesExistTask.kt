@@ -1,15 +1,15 @@
 package com.ajhuntsman.ksftp.task
 
-import com.ajhuntsman.ksftp.ConnectionParameters
 import com.ajhuntsman.ksftp.FilePair
 import com.ajhuntsman.ksftp.KsftpLog
+import com.ajhuntsman.ksftp.SftpConnectionParameters
 import com.jcraft.jsch.SftpException
 import org.apache.commons.lang3.StringUtils
 
 /**
  * Checks for the existence of one or more remote files.
  */
-internal class FilesExistTask(connectionParameters: ConnectionParameters, filePairs: List<FilePair>) : BaseTask(connectionParameters, filePairs) {
+internal class FilesExistTask(sftpConnectionParameters: SftpConnectionParameters, filePairs: List<FilePair>) : BaseTask(sftpConnectionParameters, filePairs) {
 
     override fun doWork(): Boolean {
         return checkFiles()

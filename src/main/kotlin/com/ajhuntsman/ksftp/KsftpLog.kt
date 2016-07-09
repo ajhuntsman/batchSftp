@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger
 import java.util.concurrent.TimeUnit
 
 /**
- * The logger, which can be enabled or disabled via [Client].
+ * The logger, which can be enabled or disabled via [SftpClient].
  */
 object KsftpLog {
 

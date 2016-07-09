@@ -7,12 +7,12 @@ import kotlin.test.assertFailsWith
 /**
  * Unit tests for {@see ConnectionParameters}.
  */
-class ConnectionParametersTest : TestCase() {
+class SftpConnectionParametersTest : TestCase() {
 
     @Test
     @Throws(Exception::class)
     fun testValidParameters() {
-        ConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.create().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withUsername("john.doe")
@@ -24,7 +24,7 @@ class ConnectionParametersTest : TestCase() {
     @Throws(Exception::class)
     fun testEmptyHost() {
         assertFailsWith(IllegalArgumentException::class) {
-            ConnectionParametersBuilder.create().createConnectionParameters()
+            SftpConnectionParametersBuilder.create().createConnectionParameters()
                     .withPort(2222)
                     .withUsername("john.doe")
                     .withPassword("1234".toByteArray())
@@ -36,7 +36,7 @@ class ConnectionParametersTest : TestCase() {
     @Throws(Exception::class)
     fun testInvalidHost() {
         assertFailsWith(IllegalArgumentException::class) {
-            ConnectionParametersBuilder.create().createConnectionParameters()
+            SftpConnectionParametersBuilder.create().createConnectionParameters()
                     .withHost("")
                     .withPort(2222)
                     .withUsername("john.doe")
@@ -48,7 +48,7 @@ class ConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingPort() {
-        ConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.create().createConnectionParameters()
                 .withHost("myserver.com")
                 .withUsername("john.doe")
                 .withPassword("1234".toByteArray())
@@ -58,7 +58,7 @@ class ConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingUsername() {
-        ConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.create().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withPassword("1234".toByteArray())
@@ -68,7 +68,7 @@ class ConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingPassword() {
-        ConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.create().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withUsername("john.doe")

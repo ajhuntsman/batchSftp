@@ -25,14 +25,14 @@ class SftpRemoteTests : TestCase() {
     private val localDownloadsDirectory = "/Users/andyhuntsman/Desktop/_volusionTestDownloads" // /Users/johndoe/Desktop/_testDownloads
 
     private var testFiles: Array<File>? = null
-    private var client: Client? = null
+    private var sftpClient: SftpClient? = null
 
     @Before
     @Throws(Exception::class)
     public override fun setUp() {
         super.setUp()
 
-        client = Client.create(createConnectionParameters())
+        sftpClient = SftpClient.create(createConnectionParameters())
 
         // Get the directory containing our test images
         val testImagesSourceDirectory = getTestFile("/testImages")
@@ -98,8 +98,8 @@ class SftpRemoteTests : TestCase() {
     /**
      * Creates new connection parameters.
      */
-    private fun createConnectionParameters(): ConnectionParameters {
-        return ConnectionParametersBuilder.create().createConnectionParameters()
+    private fun createConnectionParameters(): SftpConnectionParameters {
+        return SftpConnectionParametersBuilder.create().createConnectionParameters()
                 .withHostFromEnvironmentVariable(ENVIRONMENT_VARIABLE_HOST)
                 .withPortFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PORT)
                 .withUsernameFromEnvironmentVariable(ENVIRONMENT_VARIABLE_USERNAME)
@@ -156,8 +156,8 @@ class SftpRemoteTests : TestCase() {
             remoteFilePaths.add(remoteFilePath)
         }
 
-        TestCase.assertTrue("Files were not uploaded!", client!!.upload(filePairs))
-        TestCase.assertTrue("Files don't exist on server!", client!!.checkFiles(remoteFilePaths))
+        TestCase.assertTrue("Files were not uploaded!", sftpClient!!.upload(filePairs, 120*testFiles!!.size))
+        TestCase.assertTrue("Files don't exist on server!", sftpClient!!.checkFiles(remoteFilePaths))
     }
 
     @Throws(Exception::class)
@@ -174,7 +174,7 @@ class SftpRemoteTests : TestCase() {
         }
 
         // Download
-        TestCase.assertTrue("Files were not downloaded!", client!!.download(filePairs))
+        TestCase.assertTrue("Files were not downloaded!", sftpClient!!.download(filePairs))
 
         // Verify
         for (filePair in filePairs) {
@@ -195,19 +195,19 @@ class SftpRemoteTests : TestCase() {
         }
 
         // Batch rename
-        TestCase.assertTrue("Files were not renamed!", client!!.rename(filePairs))
+        TestCase.assertTrue("Files were not renamed!", sftpClient!!.rename(filePairs))
 
         // Verify
-        TestCase.assertTrue("Files don't exist on server!", client!!.checkFiles(remoteFilePaths))
+        TestCase.assertTrue("Files don't exist on server!", sftpClient!!.checkFiles(remoteFilePaths))
     }
 
     @Throws(Exception::class)
     private fun doRemoteFileDeletes() {
         val remoteFilePath = remoteDirectoryForUploads + File.separator + remoteDirectoryForMoves + File.separator + testFiles!![2].name
-        TestCase.assertTrue("File was not deleted!", client!!.delete(remoteFilePath))
-        TestCase.assertFalse("Files were not actually deleted from the server!", client!!.checkFile(remoteFilePath))
+        TestCase.assertTrue("File was not deleted!", sftpClient!!.delete(remoteFilePath))
+        TestCase.assertFalse("Files were not actually deleted from the server!", sftpClient!!.checkFile(remoteFilePath))
 
-        TestCase.assertTrue("Remote directory was not deleted: '$remoteDirectoryForUploads'", client!!.delete(remoteDirectoryForUploads))
-        TestCase.assertFalse("Remote directory was not actually deleted from the server: '$remoteDirectoryForUploads'", client!!.checkFile(remoteDirectoryForUploads))
+        TestCase.assertTrue("Remote directory was not deleted: '$remoteDirectoryForUploads'", sftpClient!!.delete(remoteDirectoryForUploads))
+        TestCase.assertFalse("Remote directory was not actually deleted from the server: '$remoteDirectoryForUploads'", sftpClient!!.checkFile(remoteDirectoryForUploads))
     }
 }
