@@ -69,6 +69,8 @@ class Client(val connectionParameters: ConnectionParameters) {
         } catch (e: InterruptedException) {
             KsftpLog.logError("Interrupted while waiting for tasks to finish!")
             throw e
+        } finally {
+            threadPool.shutdownNow()
         }
         return success
     }
