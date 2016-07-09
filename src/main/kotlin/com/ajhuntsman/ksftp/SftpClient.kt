@@ -29,13 +29,17 @@ class SftpClient(val sftpConnectionParameters: SftpConnectionParameters) {
             return true
         }
 
-        // Partition the files into batches and create one task for each batch
-        val tasks = mutableListOf<UploadTask>()
-        filePairs.asSequence().batch(batchSize).forEach { group ->
-            tasks.add(UploadTask(sftpConnectionParameters, group))
-        }
+        if (batchSize < 2) {
+            return uploadHelper(listOf(UploadTask(sftpConnectionParameters, filePairs)), timeoutInSeconds)
+        } else {
+            // Partition the files into batches and create one task for each batch
+            val tasks = mutableListOf<UploadTask>()
+            filePairs.asSequence().batch(batchSize).forEach { group ->
+                tasks.add(UploadTask(sftpConnectionParameters, group))
+            }
 
-        return uploadHelper(tasks, timeoutInSeconds)
+            return uploadHelper(tasks, timeoutInSeconds)
+        }
     }
 
     @Throws(UploadTimeoutException::class, InterruptedException::class)
