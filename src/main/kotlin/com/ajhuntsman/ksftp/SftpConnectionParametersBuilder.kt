@@ -128,6 +128,6 @@ class SftpConnectionParametersBuilder {
     }
 
     companion object Factory {
-        fun create(): SftpConnectionParametersBuilder = SftpConnectionParametersBuilder()
+        fun newInstance(): SftpConnectionParametersBuilder = SftpConnectionParametersBuilder()
     }
 }

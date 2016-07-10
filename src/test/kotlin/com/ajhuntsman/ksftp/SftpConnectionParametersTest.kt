@@ -12,7 +12,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testValidParameters() {
-        SftpConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withUsername("john.doe")
@@ -24,7 +24,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Throws(Exception::class)
     fun testEmptyHost() {
         assertFailsWith(IllegalArgumentException::class) {
-            SftpConnectionParametersBuilder.create().createConnectionParameters()
+            SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                     .withPort(2222)
                     .withUsername("john.doe")
                     .withPassword("1234".toByteArray())
@@ -36,7 +36,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Throws(Exception::class)
     fun testInvalidHost() {
         assertFailsWith(IllegalArgumentException::class) {
-            SftpConnectionParametersBuilder.create().createConnectionParameters()
+            SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                     .withHost("")
                     .withPort(2222)
                     .withUsername("john.doe")
@@ -48,7 +48,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingPort() {
-        SftpConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                 .withHost("myserver.com")
                 .withUsername("john.doe")
                 .withPassword("1234".toByteArray())
@@ -58,7 +58,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingUsername() {
-        SftpConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withPassword("1234".toByteArray())
@@ -68,7 +68,7 @@ class SftpConnectionParametersTest : TestCase() {
     @Test
     @Throws(Exception::class)
     fun testMissingPassword() {
-        SftpConnectionParametersBuilder.create().createConnectionParameters()
+        SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                 .withHost("myserver.com")
                 .withPort(2222)
                 .withUsername("john.doe")

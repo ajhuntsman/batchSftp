@@ -15,14 +15,16 @@ import java.util.*
  */
 class SftpRemoteTests : TestCase() {
 
+    // These environment variables must be defined on your machine
+    private val ENVIRONMENT_VARIABLE_HOST = "KSFTP_HOST"
+    private val ENVIRONMENT_VARIABLE_PORT = "KSFTP_PORT"
+    private val ENVIRONMENT_VARIABLE_USERNAME = "KSFTP_USERNAME"
+    private val ENVIRONMENT_VARIABLE_PASSWORD = "KSFTP_PASSWORD"
+
     // Put your own values here...
-    private val ENVIRONMENT_VARIABLE_HOST = "VOLUSION_SFTP_HOST" // mySftpServer.com
-    private val ENVIRONMENT_VARIABLE_PORT = "VOLUSION_SFTP_PORT" // 2222
-    private val ENVIRONMENT_VARIABLE_USERNAME = "VOLUSION_SFTP_USERNAME" // mySftpUsername
-    private val ENVIRONMENT_VARIABLE_PASSWORD = "VOLUSION_SFTP_PASSWORD" // mySftpPassword
-    private val remoteDirectoryForUploads = "/vspfiles/photos/tempProductImageUploads" // /myRemoteTestDirectory/testPhotos
+    private val remoteDirectoryForUploads = "/vspfiles/photos/ksftpTestFileUploads"
     private val remoteDirectoryForMoves = "ksftpTestRemoteFileMoves"
-    private val localDownloadsDirectory = "/Users/andyhuntsman/Desktop/_volusionTestDownloads" // /Users/johndoe/Desktop/_testDownloads
+    private val localDownloadsDirectory = "/Users/andyhuntsman/Desktop/_ksftpTestDownloads"
 
     private var testFiles: Array<File>? = null
     private var sftpClient: SftpClient? = null
@@ -99,7 +101,7 @@ class SftpRemoteTests : TestCase() {
      * Creates new connection parameters.
      */
     private fun createConnectionParameters(): SftpConnectionParameters {
-        return SftpConnectionParametersBuilder.create().createConnectionParameters()
+        return SftpConnectionParametersBuilder.newInstance().createConnectionParameters()
                 .withHostFromEnvironmentVariable(ENVIRONMENT_VARIABLE_HOST)
                 .withPortFromEnvironmentVariable(ENVIRONMENT_VARIABLE_PORT)
                 .withUsernameFromEnvironmentVariable(ENVIRONMENT_VARIABLE_USERNAME)
